@@ -19,13 +19,9 @@ git clone https://github.com/nico9902/INSPECT-CS.git
 cd INSPECT-CS
 pip install -r requirements.txt
 
----
-
 ## 🚀 Usage
 
 python train.py
-
----
 
 ## 🏗 Model Architecture
 The pipeline consists of three main components:
