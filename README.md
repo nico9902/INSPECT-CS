@@ -13,15 +13,21 @@ Matteo Tortora, Alessandro Bria, Rosa Sicilia.
 
 We combine structured EHR data, clinical notes, and imaging features to improve risk prediction performance.
 
+---
+
 ## ⚙️ Installation
 ```bash
 git clone https://github.com/nico9902/INSPECT-CS.git
 cd INSPECT-CS
 pip install -r requirements.txt
+```
+---
 
 ## 🚀 Usage
 
 python train.py
+
+---
 
 ## 🏗 Model Architecture
 The pipeline consists of three main components:
