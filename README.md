@@ -24,9 +24,9 @@ pip install -r requirements.txt
 ---
 
 ## 🚀 Usage
-
+```
 python train.py
-
+```
 ---
 
 ## 🏗 Model Architecture
