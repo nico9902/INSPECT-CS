@@ -1,0 +1,60 @@
+exp_name: experiment_1
+task: 1_month_mortality
+inference: False
+seed: 0
+
+# device settings
+device:
+  cuda_device: cuda:0
+  gpu_num_workers: 1
+
+# data settings
+data: 
+  hdf5_path: /mimer/NOBACKUP/groups/naiss2023-6-336/multimodal_os/PE-Insight/datasets/inspect2/reports_embedding/features.hdf5
+  cohort_csv: /mimer/NOBACKUP/groups/naiss2023-6-336/multimodal_os/PE-Insight/data/ehr/output/labels_and_features/{task}/filtered_cohort.csv
+  weighted_sample: True
+  
+# loss settings
+loss: 
+  loss_fn: BCEWithLogitsLoss
+
+# trainer settings
+trainer:
+  batch_size: 128
+  learning_rate: 0.001
+  epochs: 50
+  lr_step_size: 10
+  lr_gamma: 0.1
+  early_stopping: 20
+  warmup: False
+  warmup_period: 10
+  strategy: ddp
+  val_check_interval: 1.0
+  limit_val_batches: 1.0
+  gradient_clip_val: 0
+  precision: 16
+  optimizer: 
+    name: "AdamW"
+    weight_decay: 0.02
+  lr_scheduler: "StepLR" 
+
+# model settings
+model:
+  name: "unimodal_reports"
+  img_size: 256
+  txt_size: 768
+  dropout: 0.1
+  temp: 0.6
+  momentum: 0.1
+  queue_size: 16
+  activation: "relu"
+  pretrained: False
+  reports_encoder: "yikuan8/Clinical-Longformer"
+  embed_size: 768
+  load_text_embeddings: False
+  save_model: True
+
+# monitor display settings
+monitor:
+  mode: max
+  metric: val_auc
