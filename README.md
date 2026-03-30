@@ -52,15 +52,25 @@ The framework integrates three distinct clinical data modalities using specializ
 ---
 
 ## 📊 Dataset & Preprocessing
-The model was validated on the public **INSPECT** dataset.
 
-### Preprocessing Pipeline:
-* **Resampling**: Voxel spacing standardized to $1 \times 1 \times 3$ mm.
-* **Lung Masking**: Slices are filtered based on lung area (threshold > 2%) using a U-Net segmenter.
-* **HU Clipping**: Hounsfield Units clipped to $[-1000, 400]$ range.
-* **Normalization**: Min-Max scaling and resizing to $224 \times 224$ pixels.
+The study utilizes the **INSPECT dataset**, the first large-scale, public multimodal cohort for PE.
 
-![Preprocessing](figures/Preprocessing.png)
+### Dataset Statistics
+* **Scope:** 23,248 CTPA studies from 19,402 unique patients.
+* **Targets:** All-cause mortality at 1-month, 6-month, and 12-month intervals.
+* **Splitting:** Strict patient-level splits (train/val/test) are implemented to prevent data leakage.
+
+### Preprocessing Pipelines
+* **CT Imaging:**
+    * Intensity values converted to **Hounsfield Units (HU)**.
+    * Three standard clinical windows (**Lung, PE, and Mediastinum**) are applied and stacked into 3-channel images.
+    * Slices are resized to 256×256 and center-cropped to **224×224**.
+* **Radiology Reports:**
+    * Text is segmented into sentences using a custom clinical-aware algorithm.
+    * Tokenization is performed using the **Clinical-Longformer** tokenizer.
+* **Structured EHR:**
+    * Data represented as a sparse count matrix of clinical codes (ICD-10, Labs, Medications) prior to the scan date.
+    * Dimensionality is reduced using **Truncated SVD (TSVD)** to 128 dimensions or via the task-specific **Supervised Autoencoder**.
 
 ---
 
