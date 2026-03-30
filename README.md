@@ -30,10 +30,19 @@ python train.py
 ---
 
 ## 🏗 Model Architecture
-The pipeline consists of three main components:
-1.  **Feature Extractor**: An EfficientNetB0 backbone that processes $N$ slices per patient.
-2.  **Attention Mechanism**: A dedicated layer that computes attention scores $\alpha_i$ for each slice, aggregating them into a single context vector.
-3.  **Survival Predictor**: A Fully Connected network that outputs the risk distribution across 24 monthly time bins.
+The framework integrates three distinct clinical data modalities using specialized encoders and various fusion strategies to optimize prognostic accuracy.
+
+### Modality Encoders
+* **CT Imaging:** Slices are processed using a **ResNetV2-101** backbone (pretrained with BigTransfer). Slice-level features are aggregated via **bidirectional GRU** and a **Hybrid Attention-and-Max Pooling** mechanism.
+* **Radiology Reports:** Encoded using **Clinical-Longformer** to handle long-form clinical text. It employs a **two-level hierarchical attention mechanism** (token-level and sentence-level) to generate a 768-dimensional report embedding.
+* **Structured EHR:** Processed through a **Supervised Autoencoder (EHR-AE)** with two layers to learn task-adaptive representations. For tree-based baselines, a **LightGBM** model is also supported.
+
+### Fusion Strategies
+1.  **Late Fusion (MEAN):** A robust strategy that averages the predicted probabilities from independent unimodal models. This approach demonstrated the most stable and highest performance (MCC) across different time horizons.
+2.  **Early Fusion:** Features from all three modalities are concatenated into a single vector before being passed to a Multi-Layer Perceptron (MLP) classifier.
+3.  **Intermediate Fusion:**
+    * **ARMOUR:** Employs cross-attention and contrastive alignment to ensure robustness against missing modalities.
+    * **CROSS:** Uses a hierarchy of Multi-Head Cross-Attention (MHCA) blocks to model complex inter-modality interactions.
 
 ![Proposed Method](figures/Method.png)
 
