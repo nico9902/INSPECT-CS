@@ -1,0 +1,13 @@
+type: 2d
+csv_path: /mimer/NOBACKUP/groups/naiss2023-6-336/multimodal_os/PE-Insight/data/reports/Final_Impressions_labels.csv  #'/share/pi/nigam/projects/zphuo/data/omop_extract_PHI/som-nero-phi-nigam-starr.frazier/cohort_0.2.0_master_file_anon.csv'
+sample_frac: 1.0
+dicom_dir: /mimer/NOBACKUP/groups/naiss2023-6-336/dataset_shared/inspect2/CTPA/
+output_dir: /mimer/NOBACKUP/groups/naiss2023-6-336/multimodal_os/PE-Insight/datasets/inspect2/anon_pe_features_full_new
+
+batch_size: 1
+
+transform:
+    channels: no_repeat 
+    resize_size: 256
+    crop_size: 224
+    final_size: 224

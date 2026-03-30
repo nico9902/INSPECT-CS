@@ -1,0 +1,17 @@
+type: rsna
+csv_path: '/mimer/NOBACKUP/groups/naiss2023-6-336/multimodal_os/PE-Insight/datasets/RSNA_PE/rsna_train_master.csv'
+sample_frac: 1.0
+dicom_dir: /mimer/NOBACKUP/groups/naiss2023-6-336/multimodal_os/PE-Insight/datasets/RSNA_PE/train
+output_dir: /mimer/NOBACKUP/groups/naiss2023-6-336/multimodal_os/PE-Insight/datasets/RSNA_PE/rsna_features
+test_split: all
+weighted_sample: True   # aggiunto da me
+target: pe              # aggiunto da me
+
+batch_size: 64    # modificato da 256 a 64
+
+transform:
+    channels: repeat 
+    resize_size: 256
+    crop_size: 224
+    final_size: 224
+

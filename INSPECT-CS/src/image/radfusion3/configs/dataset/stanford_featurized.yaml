@@ -1,0 +1,18 @@
+type: 1d
+csv_path: '/mimer/NOBACKUP/groups/naiss2023-6-336/multimodal_os/PE-Insight/data/folds/unimodal_image/1_month_mortality.csv'
+sample_frac: 1.0
+dicom_dir:  /local-scratch/nigam/datasets/PE/inspect/anon_dicoms
+target: 12_month_mortality
+contextualize_slice: False # To test 
+sample_strategy: fix
+num_slices: 250
+feature_size: 768
+weighted_sample: true
+batch_size: 32
+hdf5_path: /mimer/NOBACKUP/groups/naiss2023-6-336/multimodal_os/PE-Insight/datasets/inspect2/anon_pe_features_full_new/features.hdf5
+cohort_file: /mimer/NOBACKUP/groups/naiss2023-6-336/multimodal_os/PE-Insight/data/ehr/output/labels_and_features/{task}/filtered_cohort.csv
+
+pretrain_args:
+  model_type: resnetv2_101_ct
+  input_size: 256
+  channel_type: window
