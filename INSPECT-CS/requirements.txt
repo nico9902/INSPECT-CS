@@ -1,0 +1,15 @@
+torch
+numpy
+matplotlib
+scikit-learn
+opencv-python
+hydra-core
+omegaconf
+nibabel
+pytorch-lightning
+pandas
+pydicom
+h5py
+timm
+wandb
+transformers
