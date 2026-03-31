@@ -41,6 +41,155 @@ Run mortality prediction task:
 python src/reports/run_classify.py task=1_month_mortality exp_name=reports_run_0 seed=42
 ```
 
+* **Unimodal Image:**
+
+Extract ResNetV2 features from images:
+  
+```
+python src/image/run_featurize.py
+```
+
+Run mortality prediction task:
+
+```
+python src/image/run_classify.py model=model_1d dataset=stanford_featurized \
+    dataset.csv_path=/mimer/NOBACKUP/groups/naiss2023-6-336/multimodal_os/PE-Insight/data/folds/unimodal_image/1_month_mortality.csv \
+    dataset.target=1_month_mortality \
+    dataset.pretrain_args.model_type=resnetv2_101_ct \
+    dataset.pretrain_args.channel_type=window \
+    dataset.feature_size=768 \
+    dataset.num_slices=250 \
+    model.aggregation=attention+max \
+    model.seq_encoder.rnn_type=GRU \
+    model.seq_encoder.bidirectional=true \
+    model.seq_encoder.num_layers=1 \
+    model.seq_encoder.hidden_size=128 \
+    model.seq_encoder.dropout_prob=0.25 \
+    dataset.weighted_sample=true \
+    trainer.max_epochs=50 \
+    lr=0.001 \
+    trainer.seed=$seed \
+    n_gpus=$n_gpus \
+    trainer.strategy=ddp \
+    dataset.batch_size=128 \
+    trainer.num_workers=1 \
+    dataset.num_slices=250 
+```
+
+* **Unimodal EHR-GBM:**
+
+Extract labels and features:
+  
+```
+python src/ehr/1_csv_to_database.py --path_to_input /data/ehr/omop --path_to_target /data/ehr/output/inspect_femr_extract --athena_download /data/ehr/athena/ontology.pkl --num_threads 4
+
+python src/ehr/2_generate_labels_and_features.py --path_to_cohort /data/cohort_0.2.0_master_file_anon.csv --path_to_database /data/ehr/output/inspect_femr_extract --path_to_output_dir /data/ehr/output/labels_and_features/1_month_mortality --labeling_function 1_month_mortality --num_threads 4
+
+python src/ehr/filter_labeled_patients.py
+```
+
+Run mortality prediction task:
+
+```
+python 3_train_gbm.py --path_to_cohort /data/ehr/output/labels_and_features/1_month_mortality/filtered_cohort.csv --path_to_database /data/ehr/output/inspect_femr_extract --path_to_output_dir /data/ehr/output/labels_and_features/gbm_models --path_to_label_features /data/ehr/output/labels_and_features/1_month_mortality --num_threads 20
+```
+
+Do TruncatedSVD:
+```
+python TruncatedSVD.py
+```
+
+* **Unimodal EHR-AE:**
+
+Run mortality prediction task:
+
+```
+python src/ehr/run_classify.py
+```
+
+* **Late Fusion:**
+
+Run mortality prediction task:
+
+```
+python src/late/average_probs.py
+```
+
+* **Early Fusion:**
+
+Run mortality prediction task:
+
+```
+python src/multi/run_classify.py \
+    task=1_month_mortality \
+    exp_name=1_month_mortality_early_ehr1_image_report_0 \
+    dataset.target=1_month_mortality \
+    data.weighted_sample=true \
+    trainer.epochs=50 \
+    trainer.learning_rate=0.001 \
+    trainer.alpha=0.0 \
+    seed=0 \
+    trainer.n_gpus=1 \
+    trainer.strategy=ddp \
+    trainer.batch_size=128 \
+    model.fusion.add_contrast=false \
+    model.name=early \
+    dataset.num_slices=250 \
+    model.fusion.fusion_method=concat \
+    modalities="['image', 'report', 'ehr']"\
+    model.ehr_size=128 \
+```
+
+* **Cross Fusion:**
+
+Run mortality prediction task:
+
+```
+python src/multi/run_classify.py \
+    task=1_month_mortality \
+    exp_name=1_month_mortality_cross_ehr1_image_report_0 \
+    dataset.target=1_month_mortality \
+    data.weighted_sample=true \
+    trainer.epochs=50 \
+    trainer.learning_rate=0.001 \
+    trainer.alpha=0.5 \
+    seed=0 \
+    trainer.n_gpus=1 \
+    trainer.strategy=ddp \
+    trainer.batch_size=128 \
+    model.fusion.add_contrast=true \
+    model.name=cross \
+    dataset.num_slices=250 \
+    model.fusion.fusion_method=concat \
+    modalities="['report', 'image', 'ehr']" \
+    model.ehr_size=128 \
+```
+
+* **Armour Fusion:**
+
+Run mortality prediction task:
+
+```
+python src/multi/run_classify.py \
+    task=1_month_mortality \
+    exp_name=1_month_mortality_armour_ehr1_image_report_0 \
+    dataset.target=1_month_mortality \
+    data.weighted_sample=true \
+    trainer.epochs=50 \
+    trainer.learning_rate=0.001 \
+    trainer.alpha=0.5 \
+    seed=0 \
+    trainer.n_gpus=1 \
+    trainer.strategy=ddp \
+    trainer.batch_size=128 \
+    model.fusion.add_contrast=true \
+    model.name=armour \
+    dataset.num_slices=250 \
+    model.fusion.fusion_method=concat \
+    modalities="['report', 'image', 'ehr']" \
+    model.ehr_size=128 \
+```
+
 ---
 
 ## 🏗 Model Architecture
