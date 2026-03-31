@@ -246,15 +246,29 @@ The table below illustrates the predictive performance (Mean ± SD) across 5-fol
 
 The following table compares the performance of our best unimodal baselines against different multimodal fusion architectures.
 
-| Model Category | Configuration | 1-Month MCC | 6-Month MCC | 12-Month MCC |
+| Categoria | Modello / Configurazione | 1-Mese | 6-Mesi | 12-Mesi |
 | :--- | :--- | :---: | :---: | :---: |
-| **Unimodal** | **Best Unimodal Baseline** | 0.269 ± .013 | 0.367 ± .072 | 0.454 ± .023 |
-| **Early Fusion** | EHR-TSVD, Report, Image | 0.293 ± .009 | 0.393 ± .008 | 0.426 ± .008 |
+| **Unimodal** | Best Unimodal | 0.269 ± .013 | 0.367 ± .072 | 0.454 ± .023 |
+| **Early Fusion** | EHR-AE, Report | 0.296 ± .014 | 0.371 ± .018 | 0.407 ± .009 |
+| | EHR-AE, Image | 0.302 ± .011 | 0.380 ± .016 | 0.405 ± .010 |
+| | EHR-TSVD, Report | 0.280 ± .027 | 0.392 ± .006 | 0.419 ± .010 |
+| | EHR-TSVD, Image | 0.274 ± .013 | 0.376 ± .011 | 0.390 ± .017 |
+| | Report, Image | 0.244 ± .024 | 0.350 ± .016 | 0.366 ± .012 |
 | | EHR-AE, Report, Image | 0.302 ± .008 | 0.378 ± .014 | 0.398 ± .007 |
-| **Late Fusion** | Reports, EHR-GBM | **0.399 ± .050** | 0.472 ± .011 | 0.494 ± .008 |
-| | Image, EHR-GBM | 0.374 ± .025 | 0.467 ± .031 | **0.497 ± .011** |
-| | Reports, Image, EHR-GBM | 0.362 ± .016 | **0.479 ± .011** | 0.488 ± .002 |
-| **Armour Fusion** | EHR-AE, Image, Report | 0.284 ± .023 | 0.372 ± .015 | 0.420 ± .012 |
+| | EHR-TSVD, Report, Image | 0.293 ± .009 | 0.393 ± .008 | 0.426 ± .008 |
+| **Late Fusion** | Reports, EHR-AE | 0.286 ± .015 | 0.388 ± .019 | 0.424 ± .005 |
+| | **Reports, EHR-GBM** | **0.399 ± .050** | 0.472 ± .011 | 0.494 ± .008 |
+| | Image, EHR-AE | 0.297 ± .017 | 0.395 ± .016 | 0.426 ± .004 |
+| | **Image, EHR-GBM** | 0.374 ± .025 | 0.467 ± .031 | **0.497 ± .011** |
+| | Reports, Image | 0.275 ± .015 | 0.375 ± .011 | 0.398 ± .012 |
+| | Reports, Image, EHR-AE | 0.331 ± .014 | 0.409 ± .014 | 0.444 ± .008 |
+| | **Reports, Image, EHR-GBM** | 0.362 ± .016 | **0.479 ± .011** | 0.488 ± .002 |
+| **Cross Fusion** | EHR-TSVD → Image → Report | 0.240 ± .023 | 0.321 ± .017 | 0.351 ± .028 |
+| | EHR-AE → Image → Report | 0.227 ± .011 | 0.327 ± .019 | 0.404 ± .022 |
+| | EHR-TSVD → Report | 0.247 ± .021 | 0.350 ± .028 | 0.377 ± .035 |
+| | Image → Report → EHR-AE | 0.305 ± .007 | 0.372 ± .023 | 0.397 ± .010 |
+| **Armour Fusion**| EHR-TSVD, Image, Report | 0.239 ± .027 | 0.360 ± .030 | 0.391 ± .024 |
+| | EHR-AE, Image, Report | 0.284 ± .023 | 0.372 ± .015 | 0.420 ± .012 |
 
 ### 2. Key Insights
 * **Multimodal Advantage:** Integrating radiology reports with structured EHR data consistently improves the Matthews Correlation Coefficient (MCC), especially in long-term prognosis (12 months).
