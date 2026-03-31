@@ -273,7 +273,6 @@ The following table compares the performance of our best unimodal baselines agai
 ### 2. Key Insights
 * **Multimodal Advantage:** Integrating radiology reports with structured EHR data consistently improves the Matthews Correlation Coefficient (MCC), especially in long-term prognosis (12 months).
 * **Fusion Impact:** Late fusion strategies (averaging predictions) often yield more stable results compared to early concatenation in high-dimensional sparse EHR settings.
-* **Task Sensitivity:** Models tend to show higher precision for short-term (1-month) mortality, likely due to the higher density of relevant clinical features near the index event.
 
 ---
 
