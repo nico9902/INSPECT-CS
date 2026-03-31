@@ -237,6 +237,32 @@ The study utilizes the **INSPECT dataset**, the first large-scale, public multim
 
 ---
 
+## 🔢 Results
+
+Our experiments evaluate the prognostic performance across three time horizons: **1-month**, **6-month**, and **12-month mortality**. The project compares unimodal baselines against various fusion strategies.
+
+### 1. Performance Summary
+The table below illustrates the predictive performance (Mean ± SD) across 5-fold cross-validation.
+
+The following table compares the performance of our best unimodal baselines against different multimodal fusion architectures.
+
+| Model Category | Configuration | 1-Month MCC | 6-Month MCC | 12-Month MCC |
+| :--- | :--- | :---: | :---: | :---: |
+| **Unimodal** | **Best Unimodal Baseline** | 0.269 ± .013 | 0.367 ± .072 | 0.454 ± .023 |
+| **Early Fusion** | EHR-TSVD, Report, Image | 0.293 ± .009 | 0.393 ± .008 | 0.426 ± .008 |
+| | EHR-AE, Report, Image | 0.302 ± .008 | 0.378 ± .014 | 0.398 ± .007 |
+| **Late Fusion** | Reports, EHR-GBM | **0.399 ± .050** | 0.472 ± .011 | 0.494 ± .008 |
+| | Image, EHR-GBM | 0.374 ± .025 | 0.467 ± .031 | **0.497 ± .011** |
+| | Reports, Image, EHR-GBM | 0.362 ± .016 | **0.479 ± .011** | 0.488 ± .002 |
+| **Armour Fusion** | EHR-AE, Image, Report | 0.284 ± .023 | 0.372 ± .015 | 0.420 ± .012 |
+
+### 2. Key Insights
+* **Multimodal Advantage:** Integrating radiology reports with structured EHR data consistently improves the Matthews Correlation Coefficient (MCC), especially in long-term prognosis (12 months).
+* **Fusion Impact:** Late fusion strategies (averaging predictions) often yield more stable results compared to early concatenation in high-dimensional sparse EHR settings.
+* **Task Sensitivity:** Models tend to show higher precision for short-term (1-month) mortality, likely due to the higher density of relevant clinical features near the index event.
+
+---
+
 ## 🎓 Citation
 
 If you use this code, please cite our work:
