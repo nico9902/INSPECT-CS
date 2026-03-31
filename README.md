@@ -28,10 +28,19 @@ pip install -r requirements.txt
 The project is modular: you can train unimodal models (EHR-only, Report-only) or multimodal fusion models. We use Hydra, so you can override any parameter directly from the command line.
 
 * **Unimodal Reports:**
+
+Extract Clinical Long-former features from reports:
   
 ```
-sbatch bash/reports/run_classify_1m_mort.sh
+python src/reports/run_featurize.py
 ```
+
+Run mortality prediction task:
+
+```
+python src/reports/run_classify.py task=1_month_mortality exp_name=reports_run_0 seed=42
+```
+
 ---
 
 ## 🏗 Model Architecture
