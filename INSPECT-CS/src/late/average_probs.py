@@ -5,7 +5,7 @@ import numpy as np
 import itertools
 
 # Directory di output e tasks
-output_dir = '/Users/domenicopaolo/Documents/PhD AI/Projects/PE-Insight/outputs'
+output_dir = 'outputs'
 tasks = ['1_month_mortality', '6_month_mortality', '12_month_mortality']
 report_log_path = os.path.join('fusion_metrics_report.log')
 
