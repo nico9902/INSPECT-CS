@@ -24,8 +24,13 @@ pip install -r requirements.txt
 ---
 
 ## 🚀 Usage
+
+The project is modular: you can train unimodal models (EHR-only, Report-only) or multimodal fusion models. We use Hydra, so you can override any parameter directly from the command line.
+
+* **Unimodal Reports:**
+  
 ```
-python train.py
+sbatch bash/reports/run_classify_1m_mort.sh
 ```
 ---
 
