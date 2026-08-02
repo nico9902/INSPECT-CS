@@ -1,9 +1,12 @@
 import hydra
 import os
 import sys
-sys.path.append("/mimer/NOBACKUP/groups/naiss2023-6-336/multimodal_os/PE-Insight/src")
+from pathlib import Path
 
-@hydra.main(config_path="./configs", config_name="classify")
+SRC_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(SRC_ROOT))
+
+@hydra.main(config_path="./configs", config_name="classify", version_base=None)
 def main(cfg):
     import torch
     import pytorch_lightning as pl
@@ -11,7 +14,7 @@ def main(cfg):
     from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
     from reports.lightning_model import PEModel
     from reports.datamodule import PEDataModule
-    import reports.utils_general
+    from reports import utils_general
 
     utils_general.seed_all(cfg.seed)
     task = cfg.task
@@ -20,10 +23,10 @@ def main(cfg):
     print(f"Task: {task}")
     print(f"Experiment name: {cfg.exp_name}")
 
-    # Initialize the DataModule
+    # DataModule owns split loading, weighted sampling, and batched report tensors.
     data_module = PEDataModule(cfg, task, device)
 
-    # Initialize the model
+    # PEModel wraps the report encoder, classification head, metrics, and losses.
     model = PEModel(cfg, task, device, cfg.exp_name)
 
     # Logger

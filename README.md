@@ -31,28 +31,28 @@ The project is modular: you can train unimodal models (EHR-only, Report-only) or
 
 Extract Clinical Long-former features from reports:
   
-```
-python src/reports/run_featurize.py
+```bash
+python INSPECT-CS/src/reports/run_featurize.py
 ```
 
 Run mortality prediction task:
 
-```
-python src/reports/run_classify.py task=1_month_mortality exp_name=reports_run_0 seed=42
+```bash
+python INSPECT-CS/src/reports/run_classify.py task=1_month_mortality exp_name=reports_run_0 seed=42
 ```
 
 * **Unimodal Image:**
 
 Extract ResNetV2 features from images:
   
-```
-python src/image/run_featurize.py
+```bash
+python INSPECT-CS/src/image/run_featurize.py
 ```
 
 Run mortality prediction task:
 
-```
-python src/image/run_classify.py model=model_1d dataset=stanford_featurized \
+```bash
+python INSPECT-CS/src/image/run_classify.py model=model_1d dataset=stanford_featurized \
     dataset.csv_path=/mimer/NOBACKUP/groups/naiss2023-6-336/multimodal_os/PE-Insight/data/folds/unimodal_image/1_month_mortality.csv \
     dataset.target=1_month_mortality \
     dataset.pretrain_args.model_type=resnetv2_101_ct \
@@ -80,47 +80,47 @@ python src/image/run_classify.py model=model_1d dataset=stanford_featurized \
 
 Extract labels and features:
   
-```
-python src/ehr/1_csv_to_database.py --path_to_input /data/ehr/omop --path_to_target /data/ehr/output/inspect_femr_extract --athena_download /data/ehr/athena/ontology.pkl --num_threads 4
+```bash
+python INSPECT-CS/src/ehr/1_csv_to_database.py --path_to_input /data/ehr/omop --path_to_target /data/ehr/output/inspect_femr_extract --athena_download /data/ehr/athena/ontology.pkl --num_threads 4
 
-python src/ehr/2_generate_labels_and_features.py --path_to_cohort /data/cohort_0.2.0_master_file_anon.csv --path_to_database /data/ehr/output/inspect_femr_extract --path_to_output_dir /data/ehr/output/labels_and_features/1_month_mortality --labeling_function 1_month_mortality --num_threads 4
+python INSPECT-CS/src/ehr/2_generate_labels_and_features.py --path_to_cohort /data/cohort_0.2.0_master_file_anon.csv --path_to_database /data/ehr/output/inspect_femr_extract --path_to_output_dir /data/ehr/output/labels_and_features/1_month_mortality --labeling_function 1_month_mortality --num_threads 4
 
-python src/ehr/filter_labeled_patients.py
+python INSPECT-CS/src/ehr/filter_labeled_patients.py
 ```
 
 Run mortality prediction task:
 
-```
-python 3_train_gbm.py --path_to_cohort /data/ehr/output/labels_and_features/1_month_mortality/filtered_cohort.csv --path_to_database /data/ehr/output/inspect_femr_extract --path_to_output_dir /data/ehr/output/labels_and_features/gbm_models --path_to_label_features /data/ehr/output/labels_and_features/1_month_mortality --num_threads 20
+```bash
+python INSPECT-CS/src/ehr/3_train_gbm.py --path_to_cohort /data/ehr/output/labels_and_features/1_month_mortality/filtered_cohort.csv --path_to_database /data/ehr/output/inspect_femr_extract --path_to_output_dir /data/ehr/output/labels_and_features/gbm_models --path_to_label_features /data/ehr/output/labels_and_features/1_month_mortality --num_threads 20
 ```
 
 Do TruncatedSVD:
-```
-python TruncatedSVD.py
+```bash
+python INSPECT-CS/src/ehr/TruncatedSVD.py
 ```
 
 * **Unimodal EHR-AE:**
 
 Run mortality prediction task:
 
-```
-python src/ehr/run_classify.py
+```bash
+python INSPECT-CS/src/ehr/run_classify.py
 ```
 
 * **Late Fusion:**
 
 Run mortality prediction task:
 
-```
-python src/late/average_probs.py
+```bash
+python INSPECT-CS/src/late/average_probs.py --output_dir outputs
 ```
 
 * **Early Fusion:**
 
 Run mortality prediction task:
 
-```
-python src/multi/run_classify.py \
+```bash
+python INSPECT-CS/src/multi/run_classify.py \
     task=1_month_mortality \
     exp_name=1_month_mortality_early_ehr1_image_report_0 \
     dataset.target=1_month_mortality \
@@ -136,7 +136,7 @@ python src/multi/run_classify.py \
     model.name=early \
     dataset.num_slices=250 \
     model.fusion.fusion_method=concat \
-    modalities="['image', 'report', 'ehr']"\
+    modalities="['image', 'report', 'ehr']" \
     model.ehr_size=128 \
 ```
 
@@ -144,8 +144,8 @@ python src/multi/run_classify.py \
 
 Run mortality prediction task:
 
-```
-python src/multi/run_classify.py \
+```bash
+python INSPECT-CS/src/multi/run_classify.py \
     task=1_month_mortality \
     exp_name=1_month_mortality_cross_ehr1_image_report_0 \
     dataset.target=1_month_mortality \
@@ -169,8 +169,8 @@ python src/multi/run_classify.py \
 
 Run mortality prediction task:
 
-```
-python src/multi/run_classify.py \
+```bash
+python INSPECT-CS/src/multi/run_classify.py \
     task=1_month_mortality \
     exp_name=1_month_mortality_armour_ehr1_image_report_0 \
     dataset.target=1_month_mortality \
@@ -209,7 +209,7 @@ The framework integrates three distinct clinical data modalities using specializ
 5.  **Intermediate Fusion:**
     * **ARMOUR:** Employs cross-attention and contrastive alignment to ensure robustness against missing modalities.
       ![Proposed Method](figures/armour_page-0001.jpg)
-    * **CROSS:** Uses a hierarchy of Multi-Head Cross-Attention (MHCA) blocks to model complex inter-modality interactions.ù
+    * **CROSS:** Uses a hierarchy of Multi-Head Cross-Attention (MHCA) blocks to model complex inter-modality interactions.
       ![Proposed Method](figures/cross_fusion_page-0001.jpg)
 
 ---
@@ -279,7 +279,7 @@ The following table compares the performance of our best unimodal baselines agai
 ## 🎓 Citation
 
 If you use this code, please cite our work:
-```
+```bibtex
 @article{paolomultimodal,
   title={Multimodal Clinical Data Integration for Prognosis of Pulmonary Embolism: A Comparative Study},
   author={Paolo, Domenico and Soda, Paolo and Tortora, Matteo and Bria, Alessandro and Sicilia, Rosa}
