@@ -1,17 +1,20 @@
 import hydra
 import os
 import sys
-sys.path.append("/mimer/NOBACKUP/groups/naiss2023-6-336/multimodal_os/PE-Insight/src")
+from pathlib import Path
 
-@hydra.main(config_path="./configs", config_name="classify")
+SRC_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(SRC_ROOT))
+
+@hydra.main(config_path="./configs", config_name="classify", version_base=None)
 def main(cfg):
     import torch
     import pytorch_lightning as pl
     from pytorch_lightning.loggers import TensorBoardLogger
     from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
-    from lightning_model import PEModel
-    from datamodule import PEDataModule
-    import utils_general
+    from multi.lightning_model import PEModel
+    from multi.datamodule import PEDataModule
+    from multi import utils_general
 
     # Set environment variable to disable HDF5 file locking
     os.environ['HDF5_USE_FILE_LOCKING'] = 'FALSE'
@@ -19,10 +22,11 @@ def main(cfg):
     utils_general.seed_all(cfg.seed)
     device = torch.device(cfg.device.cuda_device if torch.cuda.is_available() else "cpu")
 
-    # Initialize the DataModule
+    # DataModule aligns the selected modalities so each batch contains the same
+    # study/patient examples across image, report, and EHR features.
     data_module = PEDataModule(cfg, device)
 
-    # Initialize the model
+    # PEModel selects early, cross, or ARMOUR-style fusion from Hydra config.
     model = PEModel(cfg, device, cfg.exp_name)
 
     # Logger

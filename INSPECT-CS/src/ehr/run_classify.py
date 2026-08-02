@@ -1,9 +1,12 @@
 import hydra
 import os
 import sys
-sys.path.append("/mimer/NOBACKUP/groups/naiss2023-6-336/multimodal_os/PE-Insight/src")
+from pathlib import Path
 
-@hydra.main(config_path="./configs", config_name="classify")
+SRC_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(SRC_ROOT))
+
+@hydra.main(config_path="./configs", config_name="classify", version_base=None)
 def main(cfg):
     import torch
     import pytorch_lightning as pl
@@ -11,7 +14,7 @@ def main(cfg):
     from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
     from ehr.lightning_model import PEModel
     from ehr.datamodule import PEDataModule
-    import ehr.utils_general
+    from ehr import utils_general
 
     utils_general.seed_all(cfg.seed)
     task = cfg.task
@@ -31,7 +34,7 @@ def main(cfg):
 
     # Callbacks
     #save_dir = to_absolute_path(os.path.join("experiments/report_dir", cfg.exp_name))
-    save_dir = os.path.join("/mimer/NOBACKUP/groups/naiss2023-6-336/multimodal_os/PE-Insight/outputs", cfg.exp_name) 
+    save_dir = os.path.join("outputs", cfg.exp_name)
     try:
         os.makedirs(save_dir, exist_ok=True)
         print(f"Directory created: {save_dir}")
